@@ -50,7 +50,7 @@ def submit_message(chat_state, message):
     return chat_state, chat_state.history, ""
 
 
-def new_respond(chat_state: ChatState):
+def respond(chat_state: ChatState):
     payload = {"messages": chat_state.history}
     if chat_state.molecule is not None:
         print("MOLECULE ADDED TO CONTEXT", chat_state.molecule)
@@ -104,7 +104,7 @@ if __name__ == "__main__":
             [chat_state, chat_input],
             [chat_state, chat_box, chat_input],
         ).then(
-            new_respond,
+            respond,
             [chat_state],
             [chat_state, chat_box],
         ).then(
@@ -112,6 +112,5 @@ if __name__ == "__main__":
             chat_state,
             image,
         )
-    gr.ChatInterface
 
     app.launch()
