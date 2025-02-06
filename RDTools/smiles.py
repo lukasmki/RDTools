@@ -44,7 +44,7 @@ class SMILES:
     def react(self, reaction_smarts: str) -> Self:
         reaction: ChemicalReaction = ReactionFromSmarts(reaction_smarts)
         products = reaction.RunReactants(self.mol)
-        new = [MolToSmiles(p[0]) for p in products]
+        new = list(set(MolToSmiles(m) for p in products for m in p))
         return SMILES(new)
 
 
@@ -54,4 +54,9 @@ if __name__ == "__main__":
     print(SMILES("CC(=O)(O)").add("CNC"))
     print(
         SMILES("CC(=O)O").add("CNC").react("[C:1](=[O:2])O.[N:3]>>[C:1](=[O:2])[N:3]")
+    )
+    print(
+        SMILES("C(=O)OC(=O)O")
+        .add("CNC")
+        .react("[C:1](=[O:2])O.[N:3]>>[C:1](=[O:2])[N:3]")
     )
