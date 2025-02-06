@@ -19,10 +19,10 @@ class SMILES:
             raise ValueError(f"Input type {type(smiles)} not Mol or str {smiles}")
 
     def __repr__(self):
-        return " + ".join([MolToSmiles(m) for m in self.mol])
+        return ".".join([MolToSmiles(m) for m in self.mol])
 
     def __str__(self):
-        return " + ".join([MolToSmiles(m) for m in self.mol])
+        return ".".join([MolToSmiles(m) for m in self.mol])
 
     def remove(self, target_smarts: str) -> Self:
         target = MolFromSmarts(target_smarts)
