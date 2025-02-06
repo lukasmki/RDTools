@@ -26,26 +26,26 @@ class SMILES:
 
     def remove(self, target_smarts: str) -> Self:
         target = MolFromSmarts(target_smarts)
-        new = [DeleteSubstructs(mol, target) for mol in self.mol]
-        return SMILES(new)
+        self.mol = [DeleteSubstructs(mol, target) for mol in self.mol]
+        return self
 
     def replace(self, target_smarts: str, fragment_smarts: str) -> Self:
         target = MolFromSmarts(target_smarts)
         fragment = MolFromSmarts(fragment_smarts)
-        new = [ReplaceSubstructs(mol, target, fragment)[0] for mol in self.mol]
-        return SMILES(new)
+        self.mol = [ReplaceSubstructs(mol, target, fragment)[0] for mol in self.mol]
+        return self
 
     def add(self, smiles: str | Mol | list[str | Mol]) -> Self:
         if not isinstance(smiles, list):
             smiles = [smiles]
-        new = self.mol + [self._convert_to_mol(s) for s in smiles]
-        return SMILES(new)
+        self.mol += [self._convert_to_mol(s) for s in smiles]
+        return self
 
     def react(self, reaction_smarts: str) -> Self:
         reaction: ChemicalReaction = ReactionFromSmarts(reaction_smarts)
         products = reaction.RunReactants(self.mol)
-        new = list(set(MolToSmiles(m) for p in products for m in p))
-        return SMILES(new)
+        self.mol = list(set(m for p in products for m in p))
+        return self
 
 
 if __name__ == "__main__":
@@ -60,3 +60,10 @@ if __name__ == "__main__":
         .add("CNC")
         .react("[C:1](=[O:2])O.[N:3]>>[C:1](=[O:2])[N:3]")
     )
+
+    a = SMILES("C(=O)OC(=O)O")
+    print(a)
+    a.add("CNC")
+    print(a)
+    a.react("[C:1](=[O:2])O.[N:3]>>[C:1](=[O:2])[N:3]")
+    print(a)
